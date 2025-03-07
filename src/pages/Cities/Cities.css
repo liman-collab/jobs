@@ -1,0 +1,24 @@
+.city-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.city-list-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.city-list-item:last-child {
+  border-bottom: none;
+}
+
+.city-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.city-link:hover {
+  color: #007bff;
+}
