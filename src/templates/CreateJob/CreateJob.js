@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./CreateJob.css"; 
-import { getJobType, createJob } from "../../services/api";
+import { getJobType, createJob ,getCities } from "../../services/api";
 
 const CreateJob = () => {
   const [title, setTitle] = useState("");
@@ -15,6 +15,10 @@ const CreateJob = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [paymentUrl, setPaymentUrl] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +28,16 @@ const CreateJob = () => {
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    getCities()
+      .then((response) => {
+        setCities(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching cities:", error);
       });
   }, []);
 
@@ -38,7 +52,6 @@ const CreateJob = () => {
       return;
     }
     
-
     const jobData = {
         title,
         content: description,
@@ -47,19 +60,32 @@ const CreateJob = () => {
         address, 
         category, 
         status: "publish",
-        categories: [selectedCategory],
+        city: parseInt([selectedCity][0]),
+        job_type: parseInt([selectedCategory][0]),
       };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8088/wp-json/job/save_job", 
+
+      const orderResponse = await axios.post(
+        "http://localhost:8088/wp-json/job-application/v1/create-order", // Custom endpoint to create WooCommerce order
         jobData, 
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
-      console.log("Job created successfully:", response.data);
-      navigate("/jobs");
+
+      if (orderResponse.data.success) {
+        // Redirect user to WooCommerce checkout page for payment
+        const paymentUrl = orderResponse.data.payment_url;
+        // setPaymentUrl(paymentUrl); // Optionally, store the payment URL for reference
+        // window.location.href = paymentUrl; // Redirect to payment page
+        // navigate('/payment', { state: { paymentUrl } });
+        navigate('/jobs');
+
+      } else {
+        setError("Failed to create order. Please try again.");
+      }
+
     } catch (error) {
-      console.error("Error creating job:", error);
+      console.error("Error creating job or order:", error);
       setError("Failed to create job. Please try again.");
     }
 
@@ -104,10 +130,28 @@ const CreateJob = () => {
           onChange={(e) => setAddress(e.target.value)}
           required
         />
-        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} required>
+        <select value={selectedCity} onChange={(e) => {
+          const value = e.target.value;
+          setSelectedCity(value); 
+          console.log(value); 
+        }}  required >
+          <option value="">Select a City</option>
+          {cities.map((city) => (
+            <option key={city.term_id} value={city.term_id}>
+              {city.name}
+            </option>
+          ))}
+        </select>
+        <select value={selectedCategory} 
+        onChange={(e) => {
+          const value = e.target.value;
+          setSelectedCategory(value); 
+          console.log(value); 
+        }} 
+        required>
           <option value="">Select a Category</option>
           {categories.map((category) => (
-            <option key={category.id} value={category.id}>
+            <option key={category.term_id} value={category.term_id}>
               {category.name}
             </option>
           ))}

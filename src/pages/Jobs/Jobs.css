@@ -64,3 +64,11 @@
     font-weight: bold;
   }
   
+  .error_job_failed{
+    color: red;
+    /* center */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }

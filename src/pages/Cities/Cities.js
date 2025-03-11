@@ -33,8 +33,8 @@ const Cities = () => {
     <h2>Cities</h2>
     <ul className="city-list">
       {cities.map((city) => (
-        <li key={city.id} className="city-list-item">
-          <Link to={`/city/${city.id}`} className="city-link">
+        <li key={city.term_id} className="city-list-item">
+          <Link to={`/city/${city.term_id}`} className="city-link">
             {city.name}
           </Link>
         </li>

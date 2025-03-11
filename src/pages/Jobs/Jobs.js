@@ -8,7 +8,6 @@ const Jobs = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
- 
     getJob()
       .then((response) => {
         setJobs(response.data); 
@@ -25,9 +24,10 @@ const Jobs = () => {
   }
 
   if (error) {
-    return <div>{error}</div>; 
+    return <div className="error_job_failed"><h1> {error} </h1></div>; 
   }
 
+  
   return (
     <div className="job-cards-container">
     <h2>Jobs</h2>
@@ -39,7 +39,8 @@ const Jobs = () => {
             <p className="job-description">{job.job_description}</p>
             <p className="job-phone"><strong>Phone:</strong> {job.phone}</p>
             <p className="job-address"><strong>Address:</strong> {job.address}</p>
-            <p className="job-category"><strong>Category:</strong> {job.category}</p>
+            <p className="job-category"><strong>Job:</strong> {job.job_type}</p>
+            <p className="job-category"><strong>City:</strong> {job.city}</p>
           </div>
         </Link>
       ))}

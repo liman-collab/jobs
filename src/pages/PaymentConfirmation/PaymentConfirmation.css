@@ -1,0 +1,38 @@
+/* Payment Confirmation Page Styles */
+.confirmation-page {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .confirmation-page h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .confirmation-page p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .confirmation-page button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .confirmation-page button:hover {
+    background-color: #0056b3;
+  }
+  

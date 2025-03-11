@@ -17,10 +17,46 @@ export default function AuthPage() {
   const navigate = useNavigate();  
 
   useEffect(() => {
-    if (localStorage.getItem('authToken')) {
-      setLoggedIn(true);
+    const checkAuth = async (token) => {
+      try {
+        // Send the token to your backend for validation
+        const response = await fetch("http://localhost:8088/wp-json/jwt-auth/v1/token/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,  // Send token in the Authorization header
+          }
+        });
+  
+        // If the backend validates the token, the user is logged in
+        if (response.ok) {
+          setLoggedIn(true);
+        } else {
+          // If the token is invalid, remove it from localStorage and mark user as logged out
+          localStorage.removeItem("authToken");
+          setLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Token validation failed:", error);
+        setLoggedIn(false);
+      }
+    };
+  
+    // Get token from localStorage
+    const token = localStorage.getItem("authToken");
+  
+    // If no token, mark user as not logged in
+    if (!token) {
+      setLoggedIn(false);
+      return;
     }
-  }, []);
+  
+    // If token exists, call checkAuth function
+    checkAuth(token);
+  
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  
+  
 
   const onFormSubmit = async (event) => {
     event.preventDefault();

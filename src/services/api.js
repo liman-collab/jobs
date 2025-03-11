@@ -16,7 +16,6 @@ export const getCities = () => {
   return api.get(`/cities/get_cities`); 
 };
 
-
 export const createUser = (userData) => {
   return api.post(`/wp/v2/users/register`, userData);
 };
