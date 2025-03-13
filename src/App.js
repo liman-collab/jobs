@@ -13,8 +13,8 @@ import CreateJob from './templates/CreateJob/CreateJob';
 import Cities from './pages/Cities/Cities';
 import FrontPage from './pages/FrontPage/FrontPage';
 import City from './templates/City/City';
-import Payment from './pages/Payment/Payment';
-import PaymentConfirmation from './pages/PaymentConfirmation/PaymentConfirmation';
+import CheckoutPage from './pages/CheckoutPage/CheckoutPage';
+
 
 const App = () => (
   <BrowserRouter>
@@ -32,9 +32,7 @@ const App = () => (
           <Route path="/cities" element={<Cities />} />
           <Route path="/job/:id" element={<JobDetail />} />
           <Route path="/city/:term_id" element={<City />} />
-          <Route path="/payment" element={<Payment />} />
-          <Route path="/payment/confirmation" element={<PaymentConfirmation />} />
-
+          <Route path="/checkout/:orderId" element={<CheckoutPage />} />
         </Routes>
       </div>
       <Footer /> {/* Add the Footer component */}

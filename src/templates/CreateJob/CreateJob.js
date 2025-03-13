@@ -18,6 +18,7 @@ const CreateJob = () => {
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [paymentUrl, setPaymentUrl] = useState('');
+  const [showPopup, setShowPopup] = useState(false); // Popup state
 
   const navigate = useNavigate();
 
@@ -78,7 +79,9 @@ const CreateJob = () => {
         // setPaymentUrl(paymentUrl); // Optionally, store the payment URL for reference
         // window.location.href = paymentUrl; // Redirect to payment page
         // navigate('/payment', { state: { paymentUrl } });
-        navigate('/jobs');
+        // setShowPopup(true); // Show popup on success
+        console.log(orderResponse.data);
+        window.location.href = `/checkout/${orderResponse.data.order_id}`;
 
       } else {
         setError("Failed to create order. Please try again.");
@@ -88,6 +91,8 @@ const CreateJob = () => {
       console.error("Error creating job or order:", error);
       setError("Failed to create job. Please try again.");
     }
+
+  
 
   };
 
@@ -160,6 +165,54 @@ const CreateJob = () => {
           {loading ? "Creating..." : "Create Job"}
         </button>
       </form>
+      {showPopup && (
+      <div className="popup">
+        <div className="popup-content">
+          <h3>Job Submitted Successfully!</h3>
+          <p>Your job application has been submitted. We will process it soon.</p>
+          <button onClick={() => {
+              setShowPopup(false);
+              navigate('/jobs');
+            }}>Close</button>
+        </div>
+      </div>
+    )}
+
+    <style>
+    {`
+      .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .popup-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .popup-content h3 {
+        margin-bottom: 10px;
+      }
+      .popup-content button {
+        padding: 8px 15px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .popup-content button:hover {
+        background: #0056b3;
+      }
+    `}
+  </style>
     </div>
   );
 };
