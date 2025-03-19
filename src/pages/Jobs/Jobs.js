@@ -1,35 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getJob } from '../../services/api.js'; 
+import { getJob, getOrderFromUserId } from '../../services/api.js';
 import './Jobs.css';
+
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pendingJob, setPendingJob] = useState(true);
+  const [loadingJobs, setLoadingJobs] = useState(true);
+  const [loadingOrders, setLoadingOrders] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch jobs
   useEffect(() => {
     getJob()
       .then((response) => {
-        setJobs(response.data); 
-        setLoading(false); 
+        setJobs(response.data);
       })
-      .catch((err) => {
-        setError('Failed to fetch jobs'); 
-        setLoading(false);
-      });
+      .catch(() => {
+        setError('Failed to fetch jobs');
+      })
+      .finally(() => setLoadingJobs(false));
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; 
+  // Fetch orders (Pending Jobs)
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('authToken'); // Get token from storage or state
+        if (!token) {
+          throw new Error('No authentication token found');
+        }
+  
+        const response = await getOrderFromUserId(token); // Pass token
+
+        if (response.data.status === 'on-hold') {
+          setPendingJob(true);
+        }else{
+          setPendingJob(false);
+        }
+      } catch (error) {
+        console.error(error);
+        setError('Failed to get order from user id');
+      } finally {
+        setLoadingOrders(false);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+
+  if (loadingJobs || loadingOrders) {
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div className="error_job_failed"><h1> {error} </h1></div>; 
+    return <div className="error_job_failed"><h1>{error}</h1></div>;
   }
+
 
   
   return (
     <div className="job-cards-container">
+   {pendingJob && (
+     <div className="pending-card">Your job post is pending...</div>
+   )}
+ 
     <h2>Jobs</h2>
     <div className="job-cards">
       {jobs.map((job) => (

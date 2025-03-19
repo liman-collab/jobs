@@ -46,13 +46,6 @@ const CreateJob = () => {
     event.preventDefault();
     setLoading(true);
 
-    const authToken = localStorage.getItem("authToken");
-    if (!authToken) {
-      setError("You must be logged in to create a job.");
-      setLoading(false);
-      return;
-    }
-    
     const jobData = {
         title,
         content: description,
@@ -67,19 +60,24 @@ const CreateJob = () => {
 
     try {
 
-      const orderResponse = await axios.post(
-        "http://localhost:8088/wp-json/job-application/v1/create-order", // Custom endpoint to create WooCommerce order
-        jobData, 
-        { headers: { Authorization: `Bearer ${authToken}` } }
-      );
+      const userData = await fetch("http://localhost:8088/wp-json/v2/auth/me", {
+        method: "GET",
+        credentials: "include",
+      });
 
+      if (!userData.ok) throw new Error("Failed to retrieve user data.");
+
+      const orderResponse = await axios.post(
+        "http://localhost:8088/wp-json/job-application/v1/create-order",
+        jobData,
+        {
+          withCredentials: true  // Sends cookies with the request
+        }
+      );
+      
       if (orderResponse.data.success) {
-        // Redirect user to WooCommerce checkout page for payment
         const paymentUrl = orderResponse.data.payment_url;
-        // setPaymentUrl(paymentUrl); // Optionally, store the payment URL for reference
-        // window.location.href = paymentUrl; // Redirect to payment page
-        // navigate('/payment', { state: { paymentUrl } });
-        // setShowPopup(true); // Show popup on success
+
         console.log(orderResponse.data);
         window.location.href = `/checkout/${orderResponse.data.order_id}`;
 

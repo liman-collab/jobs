@@ -72,3 +72,10 @@
     align-items: center;
     height: 100%;
   }
+
+  .pending-card{
+    background-color: #fff;
+    border: 2px solid red;
+    padding: 10px;
+    border-radius: 10px;
+  }
