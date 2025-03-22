@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TextField, Button, Container, Typography, Box, CircularProgress } from "@mui/material";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -22,8 +23,6 @@ const Login = () => {
         credentials: "include",
       });
 
-      console.log(loginResponse);
-
       if (!loginResponse.ok) {
         throw new Error("Authentication failed. Please check your credentials.");
       }
@@ -36,8 +35,8 @@ const Login = () => {
 
       if (!userData.ok) throw new Error("Failed to retrieve user data.");
       const user = await userData.json();
-      // navigate('/login'); // Redirect to login page
       console.log(user); // Handle the user data (maybe save to context or state)
+      navigate('/dashboard'); // Redirect to dashboard or wherever you'd like
 
     } catch (err) {
       setError(err.message || "Something went wrong during login.");
@@ -47,86 +46,62 @@ const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Login</h2>
-      <form onSubmit={handleLogin} style={styles.form}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Username:</label>
-          <input
-            type="text"
+    <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh', // Full viewport height
+    }}
+  >
+      <Container maxWidth="xs" sx={{ width: '100%', padding: 4, backgroundColor: "#fff", borderRadius: 2, boxShadow: 3, margin: 'auto' }}>
+        <Typography variant="h4" component="h2" gutterBottom textAlign="center">
+          Kycu
+        </Typography>
+        
+        <form onSubmit={handleLogin}>
+          <TextField
+            label="Username"
+            variant="outlined"
+            fullWidth
+            margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            style={styles.input}
           />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Password:</label>
-          <input
+          
+          <TextField
+            label="Password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={styles.input}
           />
-        </div>
-        <button type="submit" disabled={loading} style={styles.button}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-      {error && <p style={styles.error}>{error}</p>}
-    </div>
-  );
-};
+          
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ marginTop: 2 }}
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+          </Button>
+        </form>
 
-const styles = {
-  container: {
-    maxWidth: "400px",
-    margin: "auto",
-    padding: "20px",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-  },
-  heading: {
-    textAlign: "center",
-    color: "#333",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  formGroup: {
-    marginBottom: "15px",
-  },
-  label: {
-    fontSize: "14px",
-    color: "#555",
-    marginBottom: "5px",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    width: "100%",
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    color: "#fff",
-    padding: "12px",
-    fontSize: "16px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    marginTop: "10px",
-  },
-  error: {
-    color: "red",
-    textAlign: "center",
-    marginTop: "10px",
-  },
+        {error && (
+          <Typography variant="body2" color="error" align="center" sx={{ marginTop: 2 }}>
+            {error}
+          </Typography>
+        )}
+      </Container>
+
+    </Box>
+  );
 };
 
 export default Login;

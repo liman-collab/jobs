@@ -1,79 +1,102 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Header.css';
-import axios from 'axios';
+import { AppBar, Toolbar, IconButton, Typography, Box, Button, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import PersonIcon from '@mui/icons-material/Person';
 
-const Header = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+const Header = ({ loggedIn, handleLogout }) => {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:8088/wp-json/v2/auth/me', {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log('User data:', response.data);
-        if (response.data?.email) {
-          setLoggedIn(true);
-          // window.location.href = '/login';
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching user data:', error);
-      });
-  }, []);
-
-  const logoutUser = async () => {
-    try {
-      const response = await axios.post(
-        'http://localhost:8088/wp-json/custom/v1/logout',
-        {},
-        { withCredentials: true }
-      );
-
-      console.log('Logout response:', response);
-
-      if (response.status === 200) {
-        // Manually delete cookies for HTTP
-        document.cookie = 'wordpress_logged_in=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        document.cookie = 'wordpress_sec=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        
-        setLoggedIn(false);
-        console.log('User logged out');
-      }  else {
-        throw new Error('Logout failed');
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
   };
 
   return (
-    <header className="header">
-      <div className="logo">
-        <h1>Job Portal</h1>
-        {loggedIn && <p>Welcome back!</p>}
-      </div>
-      <nav className="navbar">
-        <ul>
-          <li>
-            <Link to="/jobs">Jobs</Link>
-          </li>
-          <li>
-            {loggedIn ? (
-              <button style={{border:'none',background:'none',color:'#fff',fontSize:16,cursor:'pointer'}} onClick={logoutUser} className="logout-btn">
-                Logout
-              </button>
-            ) : (
-              <Link to="/login">Login</Link>
-            )}
-          </li>
-          <li>
-            <Link to="/cities">Qytetet</Link>
-          </li>
-        </ul>
-      </nav>
-    </header>
+    <AppBar position="sticky" sx={{ backgroundColor: '#333' }}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ color: '#fff' }}>
+            Job Portal
+          </Typography>
+          {loggedIn && (
+            <Typography variant="body2" sx={{ color: '#fff', marginLeft: 2 }}>
+              Welcome back!
+            </Typography>
+          )}
+        </Box>
+
+        {/* Desktop Menu */}
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+          <Button color="inherit" component={Link} to="/jobs">
+            Jobs
+          </Button>
+          <Button color="inherit" component={Link} to="/cities">
+            Qytetet
+          </Button>
+          <Button color="inherit" component={Link} to="/create-job">
+            Create Job
+          </Button>
+
+          {loggedIn ? (
+            <Button color="inherit" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : (
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
+          )}
+
+          <IconButton color="inherit" component={Link} to="/profile">
+            <PersonIcon />
+          </IconButton>
+        </Box>
+
+        {/* Mobile Menu Icon */}
+        <IconButton
+          color="inherit"
+          aria-label="menu"
+          sx={{ display: { xs: 'block', md: 'none' } }}
+          onClick={toggleDrawer}
+        >
+          <MenuIcon />
+        </IconButton>
+      </Toolbar>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+        }}
+      >
+        <List>
+          <ListItem button component={Link} to="/jobs">
+            <ListItemText primary="Jobs" />
+          </ListItem>
+          <ListItem button component={Link} to="/cities">
+            <ListItemText primary="Qytetet" />
+          </ListItem>
+          <ListItem button component={Link} to="/create-job">
+            <ListItemText primary="Create Job" />
+          </ListItem>
+          {loggedIn ? (
+            <ListItem button onClick={handleLogout}>
+              <ListItemText primary="Logout" />
+            </ListItem>
+          ) : (
+            <ListItem button component={Link} to="/login">
+              <ListItemText primary="Login" />
+            </ListItem>
+          )}
+          <ListItem button component={Link} to="/profile">
+            <ListItemText primary="Profile" />
+          </ListItem>
+        </List>
+      </Drawer>
+    </AppBar>
   );
 };
 

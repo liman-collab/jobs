@@ -15,6 +15,10 @@ export const getJobType = () => {
   return api.get(`/job/get_job_type`); 
 };
 
+export const getJobById = (id) => {
+  return api.get(`/custom/v1/job/${id}`); 
+};
+
 export const getCities = () => {
   return api.get(`/cities/get_cities`); 
 };

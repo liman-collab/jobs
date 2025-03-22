@@ -20,49 +20,6 @@
     padding: 20px;
   }
   
-  .job-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  
-  .job-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .job-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .job-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .job-description {
-    font-size: 1rem;
-    margin-bottom: 15px;
-  }
-  
-  .job-phone,
-  .job-address,
-  .job-category {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-  
-  .job-phone strong,
-  .job-address strong,
-  .job-category strong {
-    font-weight: bold;
-  }
   
   .error_job_failed{
     color: red;

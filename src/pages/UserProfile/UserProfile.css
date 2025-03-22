@@ -1,0 +1,86 @@
+/* UserProfile.css */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .profile-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .profile-avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .profile-field {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .profile-field label {
+    display: block;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .profile-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .profile-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .profile-button.edit {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .profile-button.edit:hover {
+    background-color: #45a049;
+  }
+  
+  .profile-button.logout {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .profile-button.logout:hover {
+    background-color: #e53935;
+  }
+  

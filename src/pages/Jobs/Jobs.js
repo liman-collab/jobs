@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { getJob, getOrderFromUserId } from '../../services/api.js';
+import { getCities, getJob } from '../../services/api';
 import './Jobs.css';
+import JobApplicationCard from '../../components/Card/Job';
+import { Grid, Container } from '@mui/material';
+import CustomFilter from '../../components/CustomFilter';
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [cities, setCities] = useState([]);
   const [pendingJob, setPendingJob] = useState(true);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [loadingCities, setLoadingCities] = useState(true);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredJobs, setFilteredJobs] = useState(jobs);
 
-  // Fetch jobs
+  const handleFilterChange = useCallback((filtered) => {
+    setFilteredJobs(filtered);
+  }, []);
+
   useEffect(() => {
     getJob()
       .then((response) => {
@@ -22,34 +31,25 @@ const Jobs = () => {
       .finally(() => setLoadingJobs(false));
   }, []);
 
-  // Fetch orders (Pending Jobs)
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const token = localStorage.getItem('authToken'); // Get token from storage or state
-        if (!token) {
-          throw new Error('No authentication token found');
-        }
-  
-        const response = await getOrderFromUserId(token); // Pass token
-
-        if (response.data.status === 'on-hold') {
-          setPendingJob(true);
-        }else{
-          setPendingJob(false);
-        }
-      } catch (error) {
-        console.error(error);
-        setError('Failed to get order from user id');
-      } finally {
-        setLoadingOrders(false);
-      }
-    };
-  
-    fetchOrders();
+    getCities()
+      .then((response) => {
+        setCities(response.data);
+      })
+      .catch(() => {
+        setError('Failed to fetch cities');
+      })
+      .finally(() => setLoadingCities(false));
   }, []);
 
-  if (loadingJobs || loadingOrders) {
+  useEffect(() => {
+    // Only update filtered jobs when jobs or filters change
+    setFilteredJobs(jobs);
+  }, [jobs]); // Dependency on jobs, not the filters
+
+
+
+  if (loadingJobs || loadingCities) {
     return <div>Loading...</div>;
   }
 
@@ -57,30 +57,21 @@ const Jobs = () => {
     return <div className="error_job_failed"><h1>{error}</h1></div>;
   }
 
-
-  
   return (
-    <div className="job-cards-container">
-   {pendingJob && (
-     <div className="pending-card">Your job post is pending...</div>
-   )}
- 
-    <h2>Jobs</h2>
-    <div className="job-cards">
-      {jobs.map((job) => (
-        <Link to={`/job/${job.id}`} key={job.id} className="job-card-link">
-          <div className="job-card">
-            <h3 className="job-title">{job.title}</h3>
-            <p className="job-description">{job.job_description}</p>
-            <p className="job-phone"><strong>Phone:</strong> {job.phone}</p>
-            <p className="job-address"><strong>Address:</strong> {job.address}</p>
-            <p className="job-category"><strong>Job:</strong> {job.job_type}</p>
-            <p className="job-category"><strong>City:</strong> {job.city}</p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div>
+    <Container sx={{ mt: 4 }}>
+      <CustomFilter jobs={jobs} cities={cities} onFilterChange={handleFilterChange} />
+      <Grid container spacing={3}>
+        {filteredJobs.length > 0 ? (
+          filteredJobs.map((job) => (
+            <Grid item xs={12} sm={6} md={4} key={job.id}>
+              <JobApplicationCard job={job} />
+            </Grid>
+          ))
+        ) : (
+          <p>No jobs found matching your filters.</p>
+        )}
+      </Grid>
+    </Container>
   );
 };
 
