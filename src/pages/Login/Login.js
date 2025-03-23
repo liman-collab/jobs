@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Container, Typography, Box, CircularProgress } from "@mui/material";
 
@@ -9,6 +9,28 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkUserLoggedIn = async () => {
+      try {
+        const response = await fetch("http://localhost:8088/wp-json/v2/auth/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const user = await response.json();
+          console.log("User already logged in:", user);
+          navigate('/jobs'); // Redirect to the desired page
+        }
+      } catch (err) {
+        console.error("Error checking user login status:", err);
+      }
+    };
+
+    checkUserLoggedIn();
+  }, [navigate]);
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,7 +58,7 @@ const Login = () => {
       if (!userData.ok) throw new Error("Failed to retrieve user data.");
       const user = await userData.json();
       console.log(user); // Handle the user data (maybe save to context or state)
-      navigate('/dashboard'); // Redirect to dashboard or wherever you'd like
+      navigate('/jobs'); // Redirect to dashboard or wherever you'd like
 
     } catch (err) {
       setError(err.message || "Something went wrong during login.");

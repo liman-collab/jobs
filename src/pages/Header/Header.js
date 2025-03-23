@@ -5,24 +5,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 
 const Header = ({ loggedIn, handleLogout }) => {
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#333' }}>
+    <AppBar position="sticky" sx={{ bgcolor: 'primary.main' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="h6" sx={{ color: '#fff' }}>
             Job Portal
           </Typography>
-          {loggedIn && (
-            <Typography variant="body2" sx={{ color: '#fff', marginLeft: 2 }}>
-              Welcome back!
-            </Typography>
-          )}
         </Box>
 
         {/* Desktop Menu */}

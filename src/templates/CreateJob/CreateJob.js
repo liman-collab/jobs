@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Stack } from "@mui/material";
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Stack,Typography } from "@mui/material";
 import { getJobType, createJob, getCities } from "../../services/api";
 
 const CreateJob = () => {
@@ -87,6 +87,9 @@ const CreateJob = () => {
 
   return (
     <div className="create-job-container">
+      <Typography variant="h4" align="center" sx={{mt:5,mb:5}} gutterBottom>
+        Krijo nje aplikacion
+      </Typography>
       {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit} style={{justifyContent:'center',justifyItems:'center', marginTop:10}}>

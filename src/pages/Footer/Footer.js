@@ -1,10 +1,11 @@
 
 import React from 'react';
 import './Footer.css';
+import { AppBar } from '@mui/material';
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <AppBar position="sticky" sx={{ bgcolor: 'primary.main', mt: 10 }}>
       <div className="footer-content">
         <p>&copy; 2025 Job Portal. All rights reserved.</p>
         <ul className="social-links">
@@ -13,7 +14,7 @@ const Footer = () => {
           <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
         </ul>
       </div>
-    </footer>
+    </AppBar>
   );
 };
 

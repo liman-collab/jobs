@@ -6,17 +6,17 @@ import JobApplicationCard from '../../components/Card/Job';
 import { Grid, Container } from '@mui/material';
 
 const City = () => {
-  const { cityId } = useParams();
+  const { cityId, cityName } = useParams();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch jobs by city ID
   useEffect(() => {
       const fetchJobs = async () => {
           try {
+
               const response = await fetch(`http://localhost:8088/wp-json/custom/v1/jobs-by-city/${cityId}`);
-              
+            
               if (!response.ok) {
                   throw new Error('Error fetching jobs');
               }
@@ -30,7 +30,6 @@ const City = () => {
           }
       };
 
-      // Fetch jobs only if cityId is available
       if (cityId) {
           fetchJobs();
       }
@@ -44,12 +43,9 @@ const City = () => {
       return <div>Error: {error}</div>;
   }
 
-  console.log(jobs, 'city');
-
-
   return (
     <div className="job-cards-container">
-          <h2>Jobs in City {cityId}</h2>
+          <h2>Shpalljet ne {cityName}</h2>
           {jobs.length === 0 ? (
               <p>No jobs found for this city.</p>
           ) : (

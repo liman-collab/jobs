@@ -47,6 +47,7 @@ const App = () => {
   const [user, setUser] = useState([]);
 
   useEffect(() => {
+    
     axios
       .get('http://localhost:8088/wp-json/v2/auth/me', {
         withCredentials: true,
@@ -65,27 +66,32 @@ const App = () => {
   }, []);
 
   const logoutUser = async () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+  
+    if (!confirmLogout) return;
+  
     try {
       const response = await axios.post(
         'http://localhost:8088/wp-json/custom/v1/logout',
         {},
         { withCredentials: true }
       );
-
+  
       if (response.status === 200) {
         // Manually delete cookies for HTTP
         document.cookie = 'wordpress_logged_in=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         document.cookie = 'wordpress_sec=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        
+  
         setLoggedIn(false);
         console.log('User logged out');
-      }  else {
+      } else {
         throw new Error('Logout failed');
       }
     } catch (error) {
       console.error(error.message);
     }
   };
+  
 
 
 return (
@@ -105,7 +111,7 @@ return (
           <Route path="/signup" element={<SignUp />} />
           <Route path="/create-job" element={<CreateJob />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/city/:cityId" element={<City />} />
+          <Route path="/city/:cityName/:cityId" element={<City />} />
           <Route path="/profile" element={<UserProfile user={user} />} />
           <Route path="/job/:id" element={<JobDetails />} />
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCities } from '../../services/api.js'; 
+import { Box, Typography, Card, CardContent, CardActionArea, Grid, CircularProgress } from '@mui/material';
+import { LocationOn as LocationIcon } from '@mui/icons-material';  // Icon for city
 import './Cities.css';
 
 const Cities = () => {
@@ -11,37 +13,50 @@ const Cities = () => {
   useEffect(() => {
     getCities()
       .then((response) => {
-        setCities(response.data); 
-        setLoading(false); 
+        setCities(response.data);
+        setLoading(false);
       })
       .catch((err) => {
-        setError('Failed to fetch jobs'); 
+        setError('Failed to fetch cities');
         setLoading(false);
       });
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div style={{ textAlign: 'center', paddingTop: '20px' }}><CircularProgress /></div>;
   }
 
   if (error) {
-    return <div>{error}</div>; 
+    return <div>{error}</div>;
   }
 
   return (
-    <div className="city-list-container">
-    <h2>Cities</h2>
-    <ul className="city-list">
-      {cities.map((city) => (
-        <li key={city.term_id} className="city-list-item">
-          <Link to={`/city/${city.term_id}`} className="city-link">
-            {city.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  </div>
-  
+    <div style={{marginTop:20}} className="city-list-container">
+    <Typography variant="h4" align="center" gutterBottom>
+      Qytetet
+    </Typography>
+      <Box sx={{ p: 3 }}>
+        <Grid container spacing={3}>
+          {cities.map((city) => (
+            <Grid item xs={12} sm={6} md={4} key={city.term_id}>
+              <Card>
+                <CardActionArea cityName={city.name}component={Link} to={`/city/${city.name}/${city.term_id}`}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      <LocationIcon sx={{ verticalAlign: 'middle', marginRight: 1 }} />
+                      {city.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {city.description || 'No description available.'}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </div>
   );
 };
 

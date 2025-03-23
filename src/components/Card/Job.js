@@ -41,7 +41,7 @@ const JobApplicationCard = ({ job }) => {
 
           <Typography variant="body2" display="flex" alignItems="center" mt={1}>
             <LocationOn sx={{ fontSize: 18, color: "error.main", mr: 1 }} />
-            <strong style={{marginRight:5}}>Location:</strong> {job.city}
+            <strong style={{marginRight:5}}>Address:</strong> {job.address}
           </Typography>
         </Box>
       </CardContent>
